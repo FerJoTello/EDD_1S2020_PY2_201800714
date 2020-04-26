@@ -13,10 +13,9 @@ public class Book {
     private int Isbn, Year, Id_User;
     private String Title, Autor, Editorial, Edition, Category, Language;
 
-    public Book(int Isbn, int Year, int Id_User, String Title, String Autor, String Editorial, String Edition, String Category, String Language) {
+    public Book(int Isbn, int Year, String Title, String Autor, String Editorial, String Edition, String Category, String Language) {
         this.Isbn = Isbn;
         this.Year = Year;
-        this.Id_User = Id_User;
         this.Title = Title;
         this.Autor = Autor;
         this.Editorial = Editorial;

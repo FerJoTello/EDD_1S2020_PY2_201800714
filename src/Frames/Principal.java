@@ -5,6 +5,7 @@
  */
 package Frames;
 
+import DIalog.Load;
 import DIalog.Login;
 import javax.swing.ImageIcon;
 
@@ -132,7 +133,8 @@ public class Principal extends javax.swing.JFrame {
      * Massive load
     */
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        
+        Load load = new Load(this, true);
+        load.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**

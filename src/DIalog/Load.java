@@ -5,6 +5,17 @@
  */
 package DIalog;
 
+import Elements.Book;
+import Elements.User;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.File;
+import java.io.FileReader;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author Fernando
@@ -16,6 +27,8 @@ public class Load extends javax.swing.JDialog {
      */
     public Load(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.setLocationRelativeTo(parent);
+        this.setTitle("Carga de datos");
         initComponents();
     }
 
@@ -28,21 +41,126 @@ public class Load extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jButton1.setText("Usuarios");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Libros");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Selecciona opción a cargar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(113, 113, 113))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(jLabel1)
+                .addGap(63, 63, 63)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    /**
+     * Add users to their respective dynamic structure by massive load. A Json
+     * file is required.
+     */
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser fc = new JFileChooser("C:\\Users\\Fernando\\OneDrive\\Documentos\\2020 1er Semestre\\Estructuras\\Proyecto2");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos JSON", "json");
+        fc.setFileFilter(filter);
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            try {
+                JsonObject objects = (JsonObject) JsonParser.parseReader(new FileReader(file));
+                JsonArray users = objects.get("Usuarios").getAsJsonArray();
+                for (int i = 0; i < users.size(); i++) {
+                    JsonObject obj = (JsonObject) users.get(i);
+                    User user = new User(obj.get("Carnet").getAsInt(),
+                            obj.get("Nombre").getAsString(),
+                            obj.get("Apellido").getAsString(),
+                            obj.get("Carrera").getAsString(),
+                            obj.get("Password").getAsString());
+                    System.out.println(user);
+                }
+                JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
+            } catch (Exception e) {
+                System.out.println("Error en la lectura del archivo de configuracion.\n" + e);
+                JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "No se seleccionó ningún archivo.");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+    /**
+     * Add books to their respective dynamic structure by massive load. A Json
+     * file is required.
+     */
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JFileChooser fc = new JFileChooser("C:\\Users\\Fernando\\OneDrive\\Documentos\\2020 1er Semestre\\Estructuras\\Proyecto2");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos JSON", "json");
+        fc.setFileFilter(filter);
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            try {
+                JsonObject objects = (JsonObject) JsonParser.parseReader(new FileReader(file));
+                JsonArray books = objects.get("libros").getAsJsonArray();
+                for (int i = 0; i < books.size(); i++) {
+                    JsonObject obj = (JsonObject) books.get(i);
+                    Book book = new Book(obj.get("ISBN").getAsInt(),
+                            obj.get("Año").getAsInt(),
+                            obj.get("Titulo").getAsString(),
+                            obj.get("Autor").getAsString(),
+                            obj.get("Editorial").getAsString(),
+                            obj.get("Edicion").getAsString(),
+                            obj.get("Categoria").getAsString(),
+                            obj.get("Idioma").getAsString());
+                    System.out.println(book);
+                }
+                JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
+            } catch (Exception e) {
+                System.out.println("Error en la lectura del archivo de configuracion.\n" + e);
+                JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "No se seleccionó ningún archivo.");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -87,5 +205,8 @@ public class Load extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
