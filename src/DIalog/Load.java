@@ -5,6 +5,7 @@
  */
 package DIalog;
 
+import DataStructures.HashTable;
 import Elements.Book;
 import Elements.User;
 import com.google.gson.JsonArray;
@@ -113,7 +114,7 @@ public class Load extends javax.swing.JDialog {
                             obj.get("Apellido").getAsString(),
                             obj.get("Carrera").getAsString(),
                             obj.get("Password").getAsString());
-                    System.out.println(user);
+                    HashTable.Users.insert(user, String.valueOf(user.getId()));
                 }
                 JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
             } catch (Exception e) {
@@ -124,6 +125,7 @@ public class Load extends javax.swing.JDialog {
         } else {
             JOptionPane.showMessageDialog(null, "No se seleccionó ningún archivo.");
         }
+        HashTable.Users.generateGraph("Usuarios");
     }//GEN-LAST:event_jButton1ActionPerformed
     /**
      * Add books to their respective dynamic structure by massive load. A Json

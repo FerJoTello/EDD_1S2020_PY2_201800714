@@ -124,14 +124,14 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     /**
      * Login button
-    */
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Login login = new Login(this, true);
         login.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
     /**
      * Massive load
-    */
+     */
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         Load load = new Load(this, true);
         load.setVisible(true);
