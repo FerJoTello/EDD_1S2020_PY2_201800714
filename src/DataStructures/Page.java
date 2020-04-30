@@ -38,25 +38,30 @@ public class Page {
         this.sort();
     }
 
-    public Page getChildPage(int isbn) {
-        if (isbn < children.First.getObject().values.First.getObject().getIsbn()) {
-            //The isbn value is less than the first of THIS page children (less than the min value).
-            return children.First.getObject();  //The first Page is returned.
-        } else if (isbn > children.Last.getObject().values.Last.getObject().getIsbn()) {
-            //The isbn value is greater than the last of THIS page children (greater than the max value).
-            return children.Last.getObject();   //The last Page is returned.
-        } else {
-            //It's between the children list so it's necessary to check every page to determine which page should be returned.
-            for (Node<Page> i = children.First; i != null; i = i.getNext()) {
-                if (isbn > i.getObject().values.First.getObject().getIsbn() && isbn < i.getObject().values.Last.getObject().getIsbn()) {
-                    //If the isbn is between the first and last nodes from the values list of the child page.
-                    return i.getObject();   //The iterated page is returned.
-                } else if (isbn > i.getObject().values.Last.getObject().getIsbn() && isbn < i.getNext().getObject().values.First.getObject().getIsbn()) {
-                    return i.getNext().getObject();
-                }
+    private Page getChildPageByPosition(int position) {
+        int jCount = 0;
+        for (Node<Page> j = children.First; j != null; j = j.getNext()) {
+            if (jCount == position) {
+                return j.getObject();
             }
+            jCount++;
         }
-        System.out.println("No se cumplio. Falta algo :c");
+        System.out.println("Nuevo metodo malo");
+        return null;
+    }
+
+    public Page getChildPage(int isbn) {
+        int iCount = 0;
+        for (Node<Book> i = values.First; i != null; i = i.getNext()) {
+            if (isbn <= i.getObject().getIsbn()) {
+                return getChildPageByPosition(iCount);
+            } else if (i.getNext() == null) {
+                //It's bigger than the last value
+                return getChildPageByPosition(iCount + 1);
+            }
+            iCount++;
+        }
+        System.out.println("No se cumplio. Falta algo para el " + isbn);
         return null;
     }
 

@@ -6,6 +6,7 @@
 package DataStructures;
 
 import Elements.Book;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -41,7 +42,25 @@ public class BTree {
                 partition(actualNode);
             }
         } else {
-            addRecursively(actualNode.getChildPage(newBook.getIsbn()), newBook);
+            Page childPage = actualNode.getChildPage(newBook.getIsbn());
+            if (childPage != null) {
+                Node<Book> i = childPage.values.First;
+                boolean exists = false;
+                while (i != null) {
+                    if (i.getObject().getIsbn() == newBook.getIsbn()) {
+                        exists = true;
+                        break;
+                    }
+                    i = i.getNext();
+                }
+                if (!exists) {
+                    addRecursively(childPage, newBook);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se puede volver a ingresar el libro con el siguiente ISBN: " + newBook.getIsbn());
+                }
+            } else {
+                System.out.println("NullPointer");
+            }
         }
     }
 
