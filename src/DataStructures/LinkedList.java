@@ -5,56 +5,61 @@
  */
 package DataStructures;
 
-import Elements.User;
-
 /**
  *
  * @author Fernando
  */
-class Node {
+class Node<T> {
 
-    private User User;
-    private String Representation;
-    private Node Next;
+    private T object;
+    private String representation;
+    private Node<T> next;
 
     public Node() {
-        this.User = null;
-        this.Representation = "";
-        this.Next = null;
+        this.object = null;
+        this.representation = "";
+        this.next = null;
     }
 
-    public Node(User User, String Representation) {
-        this.User = User;
-        this.Representation = Representation;
-        this.Next = null;
+    public Node(T object, String representation) {
+        this.object = object;
+        this.representation = representation;
+        this.next = null;
     }
 
-    public User getObject() {
-        return User;
+    public T getObject() {
+        return object;
     }
 
     public String getRepresentation() {
-        return Representation;
+        return representation;
     }
 
-    public Node getNext() {
-        return Next;
+    public Node<T> getNext() {
+        return this.next;
     }
 
-    public void setNext(Node Next) {
-        this.Next = Next;
+    public void setNext(Node<T> Next) {
+        this.next = Next;
+    }
+
+    public void setObject(T object) {
+        this.object = object;
+    }
+
+    public void setRepresentation(String representation) {
+        this.representation = representation;
     }
 
 }
 
 /**
- * LinkedList Dynamic structure used on HashTable. Holds in every node an User
- * type object.
+ * Dynamic structure that can hold any object type.
  */
-public class LinkedList {
+public class LinkedList<T> {
 
-    public Node First, Last;
-    private int Size;
+    public Node<T> First, Last;
+    public int Size;
 
     public LinkedList() {
         First = null;
@@ -62,8 +67,8 @@ public class LinkedList {
         Size = 0;
     }
 
-    public void AddFirst(User user, String representation) {
-        Node newNode = new Node(user, representation);
+    public void AddFirst(T object, String representation) {
+        Node<T> newNode = new Node<T>(object, representation);
         if (IsEmpty()) {
             //Assigns newNode as First and Last.
             First = newNode;
@@ -76,26 +81,100 @@ public class LinkedList {
         }
     }
 
-    public void AddLast(User user, String representation) {
+    public void AddLast(T object, String representation) {
         if (IsEmpty()) {
             //Since is the same algorithm...
-            AddFirst(user, representation);
+            AddFirst(object, representation);
         } else {
-            Node newNode = new Node(user, representation);
+            Node<T> newNode = new Node<T>(object, representation);
             Last.setNext(newNode);
             Last = newNode;
             Size++;
         }
     }
 
-    public int getSize() {
-        return Size;
+    public void AddAt(T object, String representation, int index) {
+        if (index > 0 && index < Size) {
+            //auxNode should be the previous node to the one that is being pushed one position forward
+            Node<T> auxNode = GetNodeAt(index - 1);
+            Node<T> newNode = new Node<T>(object, representation);
+            newNode.setNext(auxNode.getNext());
+            auxNode.setNext(newNode);
+            Size++;
+
+        } else if (index == 0) {
+            AddFirst(object, representation);
+        } else if (index == Size) {
+            AddLast(object, representation);
+        } else {
+            //Out of bounds!
+            System.out.println("Index \"" + index + "\" out of bounds!");
+        }
+    }
+
+    public T GetObjectAt(int index) {
+        return GetNodeAt(index).getObject();
+    }
+
+    private Node<T> GetNodeAt(int index) {
+        if (index > 0 && index < Size - 1) {
+            int count = 0;
+            Node<T> auxNode = First;
+            //Advancing in the list to obtain the required auxNode
+            while (count != index) {
+                auxNode = auxNode.getNext();
+                count++;
+            }
+            return auxNode;
+        } else if (index == 0) {
+            return First;
+        } else if (index == Size - 1) {
+            return Last;
+        } else {
+            //Posible exception. The index is out of bounds.
+            System.out.println("Index \"" + index + "\" out of bounds!");
+        }
+        return null;
     }
 
     private boolean IsEmpty() {
         return Size == 0;
     }
 
+    public T deappendObjectAt(int index) {
+        if (index > 0 && index < Size) {
+            int count = 0;
+            Node<T> auxNode = First;
+            //auxNode must be the previous node to the one which is being deleted.
+            while (count != index - 1) {
+                auxNode = auxNode.getNext();
+                count++;
+            }
+            T auxObject = auxNode.getNext().getObject();
+            auxNode.setNext(auxNode.getNext().getNext());
+            if (auxNode.getNext() == null) {
+                //last node was deleted
+                Last = auxNode;
+            }
+            Size--;
+            return auxObject;
+        } else if (index == 0) {
+            //First node to delete
+            T auxObject = First.getObject();
+            First = First.getNext();
+            Size--;
+            if (Size == 0) {
+                First = null;
+                Last = null;
+            }
+            return auxObject;
+        } else {
+            System.out.println("Index out of bounds! " + index);
+            return null;
+        }
+    }
+
+    /*
     public User getUser(int idRequested) {
         int count = 0;
         Node auxNode = First;
@@ -109,7 +188,8 @@ public class LinkedList {
         }
         return null;
     }
-
+     */
+ /*
     private int findUserPosition(int idRequested) {
         int actualPosition = 0;
         Node auxNode = First;
@@ -123,15 +203,9 @@ public class LinkedList {
         }
         return -1;
     }
-
-    /**
-     * Deletes an User type object of the linked list. Returns a boolean
-     * indicating if the user with the provided id could be deleted from the
-     * list.
-     *
-     * @param idRequested id from the user to delete.
-     * @return boolean indicating if the user was deleted.
      */
+
+ /*
     public boolean deleteUser(int idRequested) {
         int position = findUserPosition(idRequested);
         if (position == 0) {
@@ -159,4 +233,5 @@ public class LinkedList {
         }
         return false;
     }
+     */
 }

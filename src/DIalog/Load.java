@@ -5,6 +5,7 @@
  */
 package DIalog;
 
+import DataStructures.BTree;
 import DataStructures.HashTable;
 import Elements.Book;
 import Elements.User;
@@ -141,6 +142,7 @@ public class Load extends javax.swing.JDialog {
             try {
                 JsonObject objects = (JsonObject) JsonParser.parseReader(new FileReader(file));
                 JsonArray books = objects.get("libros").getAsJsonArray();
+                BTree prueba = new BTree();
                 for (int i = 0; i < books.size(); i++) {
                     JsonObject obj = (JsonObject) books.get(i);
                     Book book = new Book(obj.get("ISBN").getAsInt(),
@@ -151,9 +153,11 @@ public class Load extends javax.swing.JDialog {
                             obj.get("Edicion").getAsString(),
                             obj.get("Categoria").getAsString(),
                             obj.get("Idioma").getAsString());
-                    System.out.println(book);
+                    System.out.println(book.getIsbn());
+                    prueba.add(book);
                 }
                 JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
+                prueba.generateGraph("Libros");
             } catch (Exception e) {
                 System.out.println("Error en la lectura del archivo de configuracion.\n" + e);
                 JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");

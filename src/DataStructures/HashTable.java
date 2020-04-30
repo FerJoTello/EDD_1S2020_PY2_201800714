@@ -16,7 +16,7 @@ public class HashTable {
 
     public static HashTable Users = new HashTable();
     static final int SIZETABLE = 45;
-    private LinkedList[] table;
+    private LinkedList<User>[] table;
     private int numElements;
 
     public HashTable() {
@@ -33,7 +33,7 @@ public class HashTable {
 
     public void insert(User user, String representation) {
         int position = getDirection(user.getId());
-        System.out.println("Posicion de: " + user.getId() + " = " + position);
+        //System.out.println("Posicion de: " + user.getId() + " = " + position);
         if (table[position] == null) {
             table[position] = new LinkedList();
         }
@@ -42,12 +42,21 @@ public class HashTable {
     }
 
     public User getUser(int idUser) {
-        User requestedUser = null;
         int position = getDirection(idUser);
         if (table[position] != null) {
-            requestedUser = table[position].getUser(idUser);
+            int count = 0;
+            Node auxNode = table[position].First;
+            while (count != table[position].Size) {
+                User auxUser = (User) auxNode.getObject();
+                if (auxUser.getId() == idUser) {
+                    return auxUser;
+                } else {
+                    auxNode = auxNode.getNext();
+                    count++;
+                }
+            }
         }
-        return requestedUser;
+        return null;
     }
 
     /**
@@ -60,20 +69,65 @@ public class HashTable {
      */
     public boolean deleteUser(int idUser) {
         int position = getDirection(idUser);
+        boolean wasDeleted = false;
         if (table[position] != null) {
-            boolean wasDeleted = table[position].deleteUser(idUser);
-            if (wasDeleted) {
-                numElements--;
-                if (table[position].getSize() == 0) {
-                    table[position] = null;
+            //A user list was initialized previously.
+            int userListPosition = findUserPosition(idUser, table[position]);
+            if (userListPosition == 0) {
+                //It's the first node
+                table[position].First = table[position].First.getNext();
+                if (table[position].Size == 1) {
+                    //The list is empty so first and last must be null.
+                    table[position].Last = null;
                 }
-                JOptionPane.showMessageDialog(null, "Se eliminó con éxito al usuario con el carnet " + idUser);
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo eliminar al usuario con el carnet" + idUser);
+                table[position].Size--;
+                wasDeleted = true;
+            } else if (userListPosition > 0 && userListPosition < table[position].Size) {
+                //It's any other node
+                int actualPosition = 0;
+                //auxNode must be the previous node to the one which is being deleted
+                Node auxNode = table[position].First;
+                while (actualPosition != userListPosition - 1) {
+                    //Advances on the list until it gets the required node
+                    auxNode = auxNode.getNext();
+                    actualPosition++;
+                }
+                Node deletedNode = auxNode.getNext();
+                auxNode.setNext(deletedNode.getNext());
+                if (userListPosition == table[position].Size - 1) {
+                    table[position].Last = auxNode;
+                }
+                table[position].Size--;
+                wasDeleted = true;
             }
-            return wasDeleted;
         }
-        return false;
+        if (wasDeleted) {
+            //Reducing the number of elements.
+            numElements--;
+            if (table[position].Size == 0) {
+                //The list is empty.
+                table[position] = null;
+            }
+            JOptionPane.showMessageDialog(null, "Se eliminó con éxito al usuario con el carnet " + idUser);
+        } else {
+            JOptionPane.showMessageDialog(null, "No se pudo eliminar al usuario con el carnet" + idUser);
+        }
+        return wasDeleted;
+    }
+
+    private int findUserPosition(int idRequested, LinkedList<User> list) {
+        int actualPosition = 0;
+        Node auxNode = list.First;
+        while (actualPosition != list.Size) {
+            User auxUser = (User) auxNode.getObject();
+            if (auxUser.getId() == idRequested) {
+                return actualPosition;
+            } else {
+                auxNode = auxNode.getNext();
+                actualPosition++;
+            }
+        }
+        return -1;
     }
 
     public String generateGraph(String name) {

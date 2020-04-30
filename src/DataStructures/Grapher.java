@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -48,10 +49,16 @@ public class Grapher {
             try {
                 Process pr = rt.exec(command1);
                 int exitValue1 = pr.waitFor();
-                System.out.println("Exit value command1: " + exitValue1);
+                if(exitValue1!=0){
+                    System.out.println("Exit value command1: " + exitValue1);
+                    JOptionPane.showMessageDialog(null, "No se ha podido generar la imagen del reporte.");
+                }
                 pr = rt.exec(command2);
                 int exitValue2 = pr.waitFor();
-                System.out.println("Exit value command2: " + exitValue2);
+                if(exitValue2!=0){
+                    System.out.println("Exit value command2: " + exitValue2);
+                    JOptionPane.showMessageDialog(null, "No se ha podido abrir la imagen del reporte.");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
