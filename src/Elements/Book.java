@@ -10,6 +10,7 @@ package Elements;
  * @author Fernando
  */
 public class Book {
+
     private int Isbn, Year, Id_User;
     private String Title, Autor, Editorial, Edition, Category, Language;
 
@@ -59,5 +60,5 @@ public class Book {
     public String getLanguage() {
         return Language;
     }
-    
+
 }

@@ -112,35 +112,6 @@ public class LinkedList<T> {
         }
     }
 
-    public T GetObjectAt(int index) {
-        return GetNodeAt(index).getObject();
-    }
-
-    private Node<T> GetNodeAt(int index) {
-        if (index > 0 && index < Size - 1) {
-            int count = 0;
-            Node<T> auxNode = First;
-            //Advancing in the list to obtain the required auxNode
-            while (count != index) {
-                auxNode = auxNode.getNext();
-                count++;
-            }
-            return auxNode;
-        } else if (index == 0) {
-            return First;
-        } else if (index == Size - 1) {
-            return Last;
-        } else {
-            //Posible exception. The index is out of bounds.
-            System.out.println("Index \"" + index + "\" out of bounds!");
-        }
-        return null;
-    }
-
-    private boolean IsEmpty() {
-        return Size == 0;
-    }
-
     public T deappendObjectAt(int index) {
         if (index > 0 && index < Size) {
             int count = 0;
@@ -172,6 +143,59 @@ public class LinkedList<T> {
             System.out.println("Index out of bounds! " + index);
             return null;
         }
+    }
+
+    public T GetObjectAt(int index) {
+        return GetNodeAt(index).getObject();
+    }
+
+    private Node<T> GetNodeAt(int index) {
+        if (index > 0 && index < Size - 1) {
+            int count = 0;
+            Node<T> auxNode = First;
+            //Advancing in the list to obtain the required auxNode
+            while (count != index) {
+                auxNode = auxNode.getNext();
+                count++;
+            }
+            return auxNode;
+        } else if (index == 0) {
+            return First;
+        } else if (index == Size - 1) {
+            return Last;
+        } else {
+            //Posible exception. The index is out of bounds.
+            System.out.println("Index \"" + index + "\" out of bounds!");
+        }
+        return null;
+    }
+
+    public String generateGraph(String name) {
+        String dot = "digraph Report{\n"
+                + "\trankdir = LR;\n"
+                + "\tGraph[label = \"ListaSimple:"
+                + name + "\" fontname=Arial];\n"
+                + "\tedge [colorscheme = rdbu11  color=11];\n"
+                + "\tnode [colorscheme=rdbu11  color=11 style=filled fillcolor=10 fontname=Arial fontcolor=6 shape=box]\n";
+        if (!IsEmpty()) {
+            int count = 0;
+            Node auxNode = First;
+            while (count != Size - 1) {
+                dot += "\tn" + count + "[label = \"" + auxNode.getRepresentation() + "\"];\n";
+                dot += "\tn" + count + " -> n" + ++count + ";\n";
+                auxNode = auxNode.getNext();
+            }
+            dot += "\tn" + count + "[label=\"" + auxNode.getRepresentation() + "\"];\n";
+        } else {
+            dot += "\tn0[label=\"null\" shape=none]\n";
+        }
+        dot += "}";
+        Grapher grapher = new Grapher(name);
+        return grapher.generateGraph(dot);
+    }
+
+    private boolean IsEmpty() {
+        return Size == 0;
     }
 
     /*
