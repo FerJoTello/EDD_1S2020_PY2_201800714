@@ -34,7 +34,7 @@ public class Page {
     }
 
     public void addAndSort(Book newBook) {
-        values.AddLast(newBook, String.valueOf(newBook.getIsbn()));
+        values.AddLast(newBook, String.valueOf(newBook.getIsbn()) + "\\n" + newBook.getTitle());
         this.sort();
     }
 
