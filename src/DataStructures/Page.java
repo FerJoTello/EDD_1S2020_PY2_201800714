@@ -46,7 +46,6 @@ public class Page {
             }
             jCount++;
         }
-        System.out.println("Nuevo metodo malo");
         return null;
     }
 
@@ -61,7 +60,6 @@ public class Page {
             }
             iCount++;
         }
-        System.out.println("No se cumplio. Falta algo para el " + isbn);
         return null;
     }
 

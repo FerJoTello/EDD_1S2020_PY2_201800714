@@ -9,6 +9,8 @@ import DIalog.CreateBook;
 import DIalog.UserConfig;
 import DataStructures.AVLTree;
 import DataStructures.BTree;
+import DataStructures.LinkedList;
+import DataStructures.Node;
 import Elements.Book;
 import Elements.User;
 import com.google.gson.JsonArray;
@@ -19,6 +21,7 @@ import java.io.FileReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,12 +37,39 @@ public class UserLogged extends javax.swing.JFrame {
     public UserLogged(User user) {
         initComponents();
         currentUser = user;
-        this.jLabel1.setText(currentUser.getName() + " " + currentUser.getLastName());
+        this.jLabel1.setText("Ha iniciado sesión: " + currentUser.getName() + " " + currentUser.getLastName());
         this.setLocationRelativeTo(null);
+        showBooks();
     }
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    private void showBooks() {
+        AVLTree library = currentUser.getLibrary();
+        LinkedList<Book> books = new LinkedList();
+        LinkedList<BTree> categoriesInOrder = library.getInOrder();
+        for (Node<BTree> i = categoriesInOrder.First; i != null; i = i.getNext()) {
+            books = i.getObject().getBooks(books);
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        int count = 0;
+        for (Node<Book> i = books.First; i != null; i = i.getNext()) {
+            Book book = i.getObject();
+            model.addRow(new Object[8]);
+            model.setValueAt(book.getIsbn(), count, 0);
+            model.setValueAt(book.getTitle(), count, 1);
+            model.setValueAt(book.getAutor(), count, 2);
+            model.setValueAt(book.getEditorial(), count, 3);
+            model.setValueAt(book.getYear(), count, 4);
+            model.setValueAt(book.getEdition(), count, 5);
+            model.setValueAt(book.getCategory(), count, 6);
+            model.setValueAt(book.getLanguage(), count, 7);
+            count++;
+        }
+        jTable1.setModel(model);
     }
 
     /**
@@ -102,10 +132,10 @@ public class UserLogged extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                true, true, true, false, true, false, true, true
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -142,7 +172,7 @@ public class UserLogged extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1243, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
@@ -198,6 +228,7 @@ public class UserLogged extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         CreateBook cb = new CreateBook(this, true, currentUser);
         cb.setVisible(true);
+        showBooks();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -251,6 +282,7 @@ public class UserLogged extends javax.swing.JFrame {
                     }
                 }
                 JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
+                showBooks();
                 currentUser.getLibrary().generateGraph("prueba");
                 AVLTree.VirtualLibrary.generateGraph("Virtual");
             } catch (Exception e) {

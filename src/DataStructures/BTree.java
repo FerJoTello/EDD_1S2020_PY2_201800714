@@ -23,6 +23,34 @@ public class BTree {
         this.numElements = 0;
     }
 
+    public LinkedList<Book> getBooks(LinkedList<Book> booksList) {
+        if (!isEmpty()) {
+            booksList = addInOrderBooks(this.root, booksList);
+        }
+        return booksList;
+    }
+
+    private LinkedList<Book> addInOrderBooks(Page actualNode, LinkedList<Book> booksList) {
+        if (actualNode.isLeave()) {
+            Node<Book> auxNode = actualNode.values.First;
+            while (auxNode != null) {
+                booksList.AddLast(auxNode.getObject(), auxNode.getRepresentation());
+                auxNode = auxNode.getNext();
+            }
+        } else {
+            Node<Book> auxBookNode = actualNode.values.First;
+            Node<Page> auxPageNode = actualNode.children.First;
+            while (auxBookNode != null) {
+                booksList = addInOrderBooks(auxPageNode.getObject(), booksList);
+                booksList.AddLast(auxBookNode.getObject(), auxBookNode.getRepresentation());
+                auxPageNode = auxPageNode.getNext();
+                auxBookNode = auxBookNode.getNext();
+            }
+            booksList = addInOrderBooks(auxPageNode.getObject(), booksList);
+        }
+        return booksList;
+    }
+
     public boolean add(Book book) {
         if (isEmpty()) {
             this.root = new Page(null);
