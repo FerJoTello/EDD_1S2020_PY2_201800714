@@ -24,9 +24,9 @@ public class Login extends javax.swing.JDialog {
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.Parent = parent;
-        this.setLocationRelativeTo(Parent);
-        this.setTitle("Iniciar Sesión");
         initComponents();
+        this.setTitle("Iniciar Sesión");
+        this.setLocationRelativeTo(Parent);
     }
 
     /**
@@ -197,8 +197,7 @@ public class Login extends javax.swing.JDialog {
             String requestedPassword = User.getHashMD5(String.copyValueOf(jPasswordField1.getPassword()));
             if (requestedPassword.compareTo(requestedUser.getPassword()) == 0) {
                 JOptionPane.showMessageDialog(Parent, "Bienvenido, " + requestedUser.getName() + " " + requestedUser.getLastName(), "Ingreso correcto", JOptionPane.INFORMATION_MESSAGE);
-                UserLogged userLogged = new UserLogged();
-                userLogged.setCurrentUser(requestedUser);
+                UserLogged userLogged = new UserLogged(requestedUser);
                 this.setVisible(false);
                 Parent.setVisible(false);
                 userLogged.setVisible(true);

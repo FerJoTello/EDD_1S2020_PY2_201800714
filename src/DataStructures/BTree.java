@@ -23,44 +23,42 @@ public class BTree {
         this.numElements = 0;
     }
 
-    public void add(Book book) {
+    public boolean add(Book book) {
         if (isEmpty()) {
             this.root = new Page(null);
             this.root.addAndSort(book);
             numElements++;
+            return true;
         } else {
-            addRecursively(this.root, book);
+            return addRecursively(this.root, book);
         }
     }
 
-    private void addRecursively(Page actualNode, Book newBook) {
-        if (actualNode.isLeave()) {
-            actualNode.addAndSort(newBook);
-            numElements++;
-            if (actualNode.values.Size == ORDER) {
-                //It's necessary to break nodes.
-                partition(actualNode);
+    private boolean addRecursively(Page actualNode, Book newBook) {
+        Node<Book> i = actualNode.values.First;
+        boolean exists = false;
+        while (i != null) {
+            if (i.getObject().getIsbn() == newBook.getIsbn()) {
+                exists = true;
+                break;
+            }
+            i = i.getNext();
+        }
+        if (!exists) {
+            if (actualNode.isLeave()) {
+                actualNode.addAndSort(newBook);
+                numElements++;
+                if (actualNode.values.Size == ORDER) {
+                    //It's necessary to break nodes.
+                    partition(actualNode);
+                }
+                return true;
+            } else {
+                return addRecursively(actualNode.getChildPage(newBook.getIsbn()), newBook);
             }
         } else {
-            Page childPage = actualNode.getChildPage(newBook.getIsbn());
-            if (childPage != null) {
-                Node<Book> i = childPage.values.First;
-                boolean exists = false;
-                while (i != null) {
-                    if (i.getObject().getIsbn() == newBook.getIsbn()) {
-                        exists = true;
-                        break;
-                    }
-                    i = i.getNext();
-                }
-                if (!exists) {
-                    addRecursively(childPage, newBook);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se puede volver a ingresar el libro con el siguiente ISBN: " + newBook.getIsbn());
-                }
-            } else {
-                System.out.println("NullPointer");
-            }
+            JOptionPane.showMessageDialog(null, "No se puede volver a ingresar el libro con el siguiente ISBN: " + newBook.getIsbn());
+            return false;
         }
     }
 

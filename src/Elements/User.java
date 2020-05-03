@@ -5,6 +5,7 @@
  */
 package Elements;
 
+import DataStructures.AVLTree;
 import DataStructures.LinkedList;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,14 +18,14 @@ public class User {
 
     private int Id;
     private String Name, LastName, Career, Password;
-    private LinkedList<Book> booksList;
+    private AVLTree library;
 
     public User(int Id, String Name, String LastName, String Career, String password) {
         this.Id = Id;
         this.Name = Name;
         this.LastName = LastName;
         this.Career = Career;
-        this.booksList = new LinkedList();
+        this.library = new AVLTree();
         this.Password = getHashMD5(password);
         System.out.println("Password de " + this.Name + ": " + this.Password);
     }
@@ -65,8 +66,8 @@ public class User {
         return Password;
     }
 
-    public LinkedList<Book> getBooksList() {
-        return this.booksList;
+    public AVLTree getLibrary() {
+        return this.library;
     }
 
 }

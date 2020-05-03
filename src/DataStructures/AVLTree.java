@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  */
 public class AVLTree {
 
-    public static AVLTree Categories = new AVLTree();
+    public static AVLTree VirtualLibrary = new AVLTree();
     public AVLNode root;
     public int size;
 
@@ -22,7 +22,15 @@ public class AVLTree {
         this.size = 0;
     }
 
-    public AVLNode checkRecursively(AVLNode actualNode, String categoryName) {
+    public BTree getCategory(String categoryName) {
+        try {
+            return checkRecursively(this.root, categoryName).getBTree();
+        } catch (NullPointerException ex) {
+            return null;
+        }
+    }
+
+    private AVLNode checkRecursively(AVLNode actualNode, String categoryName) {
         if (actualNode == null) {
             //Doesn't exists
             return null;

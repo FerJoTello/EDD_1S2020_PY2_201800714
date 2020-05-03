@@ -31,15 +31,16 @@ public class UserLogged extends javax.swing.JFrame {
     /**
      * Creates new form UserLogged
      */
-    public UserLogged() {
+    public UserLogged(User user) {
         initComponents();
+        currentUser = user;
+        this.jLabel1.setText(currentUser.getName() + " " + currentUser.getLastName());
         this.setLocationRelativeTo(null);
-
     }
 
     public void setCurrentUser(User userlogged) {
         currentUser = userlogged;
-        this.jLabel1.setText(currentUser.getName() + " " + currentUser.getLastName());
+
     }
 
     /**
@@ -216,7 +217,6 @@ public class UserLogged extends javax.swing.JFrame {
             try {
                 JsonObject objects = (JsonObject) JsonParser.parseReader(new FileReader(file));
                 JsonArray books = objects.get("libros").getAsJsonArray();
-                AVLTree avl = new AVLTree();
                 for (int i = 0; i < books.size(); i++) {
                     JsonObject obj = (JsonObject) books.get(i);
                     Book book = new Book(obj.get("ISBN").getAsInt(),
@@ -226,21 +226,37 @@ public class UserLogged extends javax.swing.JFrame {
                             obj.get("Editorial").getAsString(),
                             obj.get("Edicion").getAsString(),
                             obj.get("Categoria").getAsString(),
-                            obj.get("Idioma").getAsString());
+                            obj.get("Idioma").getAsString(),
+                            currentUser.getId());
                     System.out.println(book.getIsbn());
-                    if (avl.checkRecursively(avl.root, book.getCategory()) != null) {
-                        BTree category = avl.checkRecursively(avl.root, book.getCategory()).getBTree();
-                        category.add(book);
+                    String categoryName = book.getCategory();
+                    BTree virtualCategory = AVLTree.VirtualLibrary.getCategory(categoryName);
+                    boolean wasAddedAtVirtual;
+                    if (virtualCategory == null) {
+                        //it's a NEW CATEGORY so it's added to the virtualCategory
+                        virtualCategory = new BTree();
+                        AVLTree.VirtualLibrary.add(virtualCategory, categoryName);
+                    }
+                    //now it's sure that the virtualCategory already exists
+                    wasAddedAtVirtual = virtualCategory.add(book);
+                    if (wasAddedAtVirtual) {
+                        //can be added to the user's category
+                        BTree userCategory = currentUser.getLibrary().getCategory(categoryName);
+                        if (userCategory == null) {
+                            //new category for the user's library
+                            userCategory = new BTree();
+                            currentUser.getLibrary().add(userCategory, categoryName);
+                        }
+                        userCategory.add(book);
                     } else {
-                        BTree newCategory = new BTree();
-                        newCategory.add(book);
-                        avl.add(newCategory, book.getCategory());
+                        //can not be added to the user's category
                     }
                 }
                 JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
-                avl.generateGraph("Categorias");
+                currentUser.getLibrary().generateGraph("prueba");
+                AVLTree.VirtualLibrary.generateGraph("Virtual");
             } catch (Exception e) {
-                System.out.println("Error en la lectura del archivo de configuracion.\n" + e);
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");
             }
 
@@ -279,7 +295,7 @@ public class UserLogged extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UserLogged().setVisible(true);
+                new UserLogged(null).setVisible(true);
             }
         });
     }

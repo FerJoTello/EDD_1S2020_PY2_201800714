@@ -17,6 +17,8 @@ public class UserConfig extends javax.swing.JDialog {
     public UserConfig(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+        this.setTitle("Configurar Usuario");
     }
 
     /**
