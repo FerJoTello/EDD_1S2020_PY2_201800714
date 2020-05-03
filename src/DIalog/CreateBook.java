@@ -191,10 +191,10 @@ public class CreateBook extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(null, "Se ingresó el libro a su librería con éxito", "Ingreso correcto", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, jTextField7.getText() + " no existe como categoria, debes de  crear una nueva categoria", "Fallo al ingresar libro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, jTextField7.getText() + " no existe como categoría en tu librería. Debes de crear una nueva categoria", "Fallo al ingresar libro", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, jTextField7.getText() + " no existe como categoria, debes de  crear una nueva categoria", "Fallo al ingresar libro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, jTextField7.getText() + " no existe como categoría en la librería virtual. Debes de crear una nueva categoria", "Fallo al ingresar libro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

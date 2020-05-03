@@ -104,6 +104,11 @@ public class UserLogged extends javax.swing.JFrame {
         });
 
         jButton2.setText("Crear Nueva Categoria");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Configurar Usuario");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -150,6 +155,11 @@ public class UserLogged extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable1);
 
         jButton6.setText("Eliminar Una Categoria");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Cargar Libros");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -295,6 +305,23 @@ public class UserLogged extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No se seleccionó ningún archivo.");
         }
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //Checking if the category was created previously
+        if (currentUser.getLibrary().getCategory(jTextField1.getText()) == null) {
+            currentUser.getLibrary().add(new BTree(), jTextField1.getText());
+            if (AVLTree.VirtualLibrary.getCategory(jTextField1.getText()) == null) {
+                AVLTree.VirtualLibrary.add(new BTree(), jTextField1.getText());
+            }
+            JOptionPane.showMessageDialog(null, "Se ha creado con éxito la categoría " + jTextField1.getText());
+        } else {
+            JOptionPane.showMessageDialog(null, "Ya existe la categoria con el nombre " + jTextField1.getText());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
