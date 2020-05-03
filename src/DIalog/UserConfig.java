@@ -5,20 +5,33 @@
  */
 package DIalog;
 
+import DataStructures.HashTable;
+import Elements.User;
+import Frames.Principal;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Fernando
  */
 public class UserConfig extends javax.swing.JDialog {
+    
+    private User currentUser;
+    private java.awt.Frame Parent;
 
     /**
      * Creates new form UserConfig
      */
-    public UserConfig(java.awt.Frame parent, boolean modal) {
+    public UserConfig(java.awt.Frame parent, boolean modal, User user) {
         super(parent, modal);
+        this.currentUser = user;
+        Parent = parent;
         initComponents();
         setLocationRelativeTo(parent);
         this.setTitle("Configurar Usuario");
+        jTextField1.setText(currentUser.getName());
+        jTextField2.setText(currentUser.getLastName());
+        jTextField3.setText(currentUser.getCareer());
     }
 
     /**
@@ -48,8 +61,18 @@ public class UserConfig extends javax.swing.JDialog {
         jLabel1.setText("Editar Datos");
 
         jButton1.setText("Guardar Cambios");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Eliminar Cuenta");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Nombre:");
 
@@ -128,6 +151,26 @@ public class UserConfig extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (JOptionPane.showConfirmDialog(null, "¿Estás seguro que quieres cambiar tus datos?\nSe usará la información que se encuentran en los campos", "Confirmar cambios", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
+            currentUser.setName(jTextField1.getText());
+            currentUser.setLastName(jTextField2.getText());
+            currentUser.setCareer(jTextField3.getText());
+            currentUser.setPassword(String.copyValueOf(jPasswordField1.getPassword()));
+            JOptionPane.showMessageDialog(null, "Se han realizado los cambios");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (JOptionPane.showConfirmDialog(null, "¿Estás seguro que quieres eliminar tus datos?\nSe eliminará tu librería y toda la información relacionada a ella.", "Confirmar cambios", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
+            HashTable.Users.deleteUser(currentUser.getId());
+            this.setVisible(false);
+            Parent.setVisible(false);
+            Principal pr = new Principal();
+            pr.setVisible(true);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -158,7 +201,7 @@ public class UserConfig extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UserConfig dialog = new UserConfig(new javax.swing.JFrame(), true);
+                UserConfig dialog = new UserConfig(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -37,8 +37,12 @@ public class HashTable {
         if (table[position] == null) {
             table[position] = new LinkedList();
         }
-        table[position].AddLast(user, representation);
-        numElements++;
+        if (findUserPosition(user.getId(), table[position]) == -1) {
+            table[position].AddLast(user, representation);
+            numElements++;
+        } else {
+            JOptionPane.showMessageDialog(null, "Ya existe un usuario con el carnet: " + user.getId(), "Error al crear", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public User getUser(int idUser) {

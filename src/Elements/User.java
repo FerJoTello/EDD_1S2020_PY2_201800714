@@ -6,7 +6,6 @@
 package Elements;
 
 import DataStructures.AVLTree;
-import DataStructures.LinkedList;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,7 +26,7 @@ public class User {
         this.Career = Career;
         this.library = new AVLTree();
         this.Password = getHashMD5(password);
-        System.out.println("Password de " + this.Name + ": " + this.Password);
+        //System.out.println("Password de " + this.Name + ": " + this.Password);
     }
 
     public static String getHashMD5(String password) {
@@ -68,6 +67,22 @@ public class User {
 
     public AVLTree getLibrary() {
         return this.library;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public void setLastName(String LastName) {
+        this.LastName = LastName;
+    }
+
+    public void setCareer(String Career) {
+        this.Career = Career;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = getHashMD5(Password);
     }
 
 }

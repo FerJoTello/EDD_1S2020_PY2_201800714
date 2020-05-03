@@ -232,8 +232,9 @@ public class UserLogged extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        UserConfig uc = new UserConfig(this, true);
+        UserConfig uc = new UserConfig(this, true, currentUser);
         uc.setVisible(true);
+        this.jLabel1.setText("Ha iniciado sesión: " + currentUser.getName() + " " + currentUser.getLastName());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
