@@ -38,9 +38,8 @@ public class UserLogged extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public void setCurrentUser(User userlogged) {
-        currentUser = userlogged;
-
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     /**
@@ -197,9 +196,8 @@ public class UserLogged extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        CreateBook cb = new CreateBook(this, true);
+        CreateBook cb = new CreateBook(this, true, currentUser);
         cb.setVisible(true);
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

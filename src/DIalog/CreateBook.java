@@ -5,18 +5,27 @@
  */
 package DIalog;
 
+import DataStructures.AVLTree;
+import DataStructures.BTree;
+import Elements.Book;
+import Elements.User;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Fernando
  */
 public class CreateBook extends javax.swing.JDialog {
 
+    private User currentUser;
+
     /**
      * Creates new form CreateBook
      */
-    public CreateBook(java.awt.Frame parent, boolean modal) {
+    public CreateBook(java.awt.Frame parent, boolean modal, User user) {
         super(parent, modal);
         initComponents();
+        currentUser = user;
     }
 
     /**
@@ -50,6 +59,11 @@ public class CreateBook extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jButton1.setText("Crear Libro");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Llena los siguientes campos:");
 
@@ -156,6 +170,34 @@ public class CreateBook extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        BTree virtualCategory = AVLTree.VirtualLibrary.getCategory(jTextField7.getText());
+        if (virtualCategory != null) {
+            BTree userCategory = currentUser.getLibrary().getCategory(jTextField7.getText());
+            if (userCategory != null) {
+                Book createdBook = new Book(
+                        Integer.valueOf(jTextField1.getText()),
+                        Integer.valueOf(jTextField5.getText()),
+                        jTextField2.getText(),
+                        jTextField3.getText(),
+                        jTextField4.getText(),
+                        jTextField6.getText(),
+                        jTextField7.getText(),
+                        jTextField8.getText(),
+                        currentUser.getId());
+                boolean wasAddedAtVirtual = virtualCategory.add(createdBook);
+                if (wasAddedAtVirtual) {
+                    userCategory.add(createdBook);
+                    JOptionPane.showMessageDialog(null, "Se ingresó el libro a su librería con éxito", "Ingreso correcto", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, jTextField7.getText() + " no existe como categoria, debes de  crear una nueva categoria", "Fallo al ingresar libro", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, jTextField7.getText() + " no existe como categoria, debes de  crear una nueva categoria", "Fallo al ingresar libro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -186,7 +228,7 @@ public class CreateBook extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CreateBook dialog = new CreateBook(new javax.swing.JFrame(), true);
+                CreateBook dialog = new CreateBook(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
