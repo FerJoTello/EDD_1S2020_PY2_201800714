@@ -5,18 +5,73 @@
  */
 package Frames;
 
+import DIalog.CreateBook;
+import DIalog.UserConfig;
+import DataStructures.AVLTree;
+import DataStructures.BTree;
+import DataStructures.LinkedList;
+import DataStructures.Node;
+import Elements.Book;
+import Elements.User;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Fernando
  */
 public class UserLogged extends javax.swing.JFrame {
 
+    private User currentUser;
+
     /**
      * Creates new form UserLogged
      */
-    public UserLogged() {
+    public UserLogged(User user) {
         initComponents();
+        currentUser = user;
+        this.jLabel1.setText("Ha iniciado sesión: " + currentUser.getName() + " " + currentUser.getLastName());
         this.setLocationRelativeTo(null);
+        showBooks();
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    private void showBooks() {
+        AVLTree library = currentUser.getLibrary();
+        LinkedList<Book> books = new LinkedList();
+        LinkedList<BTree> categoriesInOrder = library.getInOrder();
+        for (Node<BTree> i = categoriesInOrder.First; i != null; i = i.getNext()) {
+            books = i.getObject().getBooks(books);
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        int count = 0;
+        for (Node<Book> i = books.First; i != null; i = i.getNext()) {
+            Book book = i.getObject();
+            model.addRow(new Object[8]);
+            model.setValueAt(book.getIsbn(), count, 0);
+            model.setValueAt(book.getTitle(), count, 1);
+            model.setValueAt(book.getAutor(), count, 2);
+            model.setValueAt(book.getEditorial(), count, 3);
+            model.setValueAt(book.getYear(), count, 4);
+            model.setValueAt(book.getEdition(), count, 5);
+            model.setValueAt(book.getCategory(), count, 6);
+            model.setValueAt(book.getLanguage(), count, 7);
+            count++;
+        }
+        jTable1.setModel(model);
     }
 
     /**
@@ -28,21 +83,247 @@ public class UserLogged extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton6 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jButton7 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jButton1.setText("Ingresar Nuevo Libro");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Crear Nueva Categoria");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Configurar Usuario");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Salir");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("name");
+
+        jButton5.setText("Dar Baja a Libro");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ISBN", "Titulo", "Autor", "Editorial", "Año", "Edicion", "Categoria", "Idioma"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(jTable1);
+
+        jButton6.setText("Eliminar Una Categoria");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Cargar Libros");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(47, 47, 47)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1243, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton6)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton3))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton5)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton7)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Principal pr = new Principal();
+        this.setVisible(false);
+        pr.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        CreateBook cb = new CreateBook(this, true, currentUser);
+        cb.setVisible(true);
+        showBooks();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        UserConfig uc = new UserConfig(this, true, currentUser);
+        uc.setVisible(true);
+        this.jLabel1.setText("Ha iniciado sesión: " + currentUser.getName() + " " + currentUser.getLastName());
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos JSON", "json");
+        fc.setFileFilter(filter);
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            try {
+                JsonObject objects = (JsonObject) JsonParser.parseReader(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
+                JsonArray books = objects.get("libros").getAsJsonArray();
+                for (int i = 0; i < books.size(); i++) {
+                    JsonObject obj = (JsonObject) books.get(i);
+                    Book book = new Book(obj.get("ISBN").getAsInt(),
+                            obj.get("Año").getAsInt(),
+                            obj.get("Titulo").getAsString(),
+                            obj.get("Autor").getAsString(),
+                            obj.get("Editorial").getAsString(),
+                            obj.get("Edicion").getAsString(),
+                            obj.get("Categoria").getAsString(),
+                            obj.get("Idioma").getAsString(),
+                            currentUser.getId());
+                    System.out.println(book.getIsbn());
+                    String categoryName = book.getCategory();
+                    BTree virtualCategory = AVLTree.VirtualLibrary.getCategory(categoryName);
+                    boolean wasAddedAtVirtual;
+                    if (virtualCategory == null) {
+                        //it's a NEW CATEGORY so it's added to the virtualCategory
+                        virtualCategory = new BTree();
+                        AVLTree.VirtualLibrary.add(virtualCategory, categoryName);
+                    }
+                    //now it's sure that the virtualCategory already exists
+                    wasAddedAtVirtual = virtualCategory.add(book);
+                    if (wasAddedAtVirtual) {
+                        //can be added to the user's category
+                        BTree userCategory = currentUser.getLibrary().getCategory(categoryName);
+                        if (userCategory == null) {
+                            //new category for the user's library
+                            userCategory = new BTree();
+                            currentUser.getLibrary().add(userCategory, categoryName);
+                        }
+                        userCategory.add(book);
+                    } else {
+                        //can not be added to the user's category
+                    }
+                }
+                JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
+                showBooks();
+                //currentUser.getLibrary().generateGraph("prueba");
+                //AVLTree.VirtualLibrary.generateGraph("Virtual");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "No se seleccionó ningún archivo.");
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //Checking if the category was created previously
+        if (currentUser.getLibrary().getCategory(jTextField1.getText()) == null) {
+            currentUser.getLibrary().add(new BTree(), jTextField1.getText());
+            if (AVLTree.VirtualLibrary.getCategory(jTextField1.getText()) == null) {
+                AVLTree.VirtualLibrary.add(new BTree(), jTextField1.getText());
+            }
+            JOptionPane.showMessageDialog(null, "Se ha creado con éxito la categoría " + jTextField1.getText());
+        } else {
+            JOptionPane.showMessageDialog(null, "Ya existe la categoria con el nombre " + jTextField1.getText());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -74,11 +355,23 @@ public class UserLogged extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UserLogged().setVisible(true);
+                new UserLogged(null).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
