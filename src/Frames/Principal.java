@@ -12,8 +12,11 @@ import Elements.User;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -178,14 +181,14 @@ public class Principal extends javax.swing.JFrame {
      * Massive load
      */
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        JFileChooser fc = new JFileChooser("C:\\Users\\Fernando\\OneDrive\\Documentos\\2020 1er Semestre\\Estructuras\\Proyecto2");
+        JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos JSON", "json");
         fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             try {
-                JsonObject objects = (JsonObject) JsonParser.parseReader(new FileReader(file));
+                JsonObject objects = (JsonObject) JsonParser.parseReader(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
                 JsonArray users = objects.get("Usuarios").getAsJsonArray();
                 for (int i = 0; i < users.size(); i++) {
                     JsonObject obj = (JsonObject) users.get(i);
@@ -201,7 +204,7 @@ public class Principal extends javax.swing.JFrame {
                 System.out.println("Error en la lectura del archivo de configuracion.\n" + e);
                 JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");
             }
-            HashTable.Users.generateGraph("Usuarios");
+            //  HashTable.Users.generateGraph("Usuarios");
         } else {
             JOptionPane.showMessageDialog(null, "No se seleccionó ningún archivo.");
         }

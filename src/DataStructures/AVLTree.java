@@ -198,14 +198,10 @@ public class AVLTree {
         //Updating the height
         actualNode.height = max(getHeight(actualNode.left), getHeight(actualNode.right)) + 1;
 
-        /* 3. Get the balance factor of this ancestor 
-              node to check whether this node became 
-              unbalanced */
+        //Get the balance factor of the actual node to check whether this node became unbalanced 
         int balance = getBalance(actualNode);
-        // Depending on the balance value does the 
-        // If this node becomes unbalanced, then there 
-        // are 4 cases Left Left Case
-
+        // Depending on the balance value there are 4 cases.
+        //Left Left Case    
         if (balance > 1 && newNode.categoryName.compareToIgnoreCase(actualNode.left.categoryName) < 0) {
             return rightRotate(actualNode);
         }
@@ -227,7 +223,107 @@ public class AVLTree {
             return leftRotate(actualNode);
         }
 
-        /* return the (unchanged) node pointer */
         return actualNode;
+    }
+
+    public void delete(String category) {
+        Logical log = new Logical(false);
+        this.root = deleteRecursively(this.root, category, log);
+    }
+
+    AVLNode deleteRecursively(AVLNode actualNode, String category, Logical log) {
+        if (actualNode == null) {
+            System.out.println("No sale");
+        } else if (category.compareTo(actualNode.categoryName) < 0) {
+            AVLNode left = deleteRecursively(actualNode.left, category, log);
+            actualNode.left = left;
+            if (log.wellBalanced) {
+                actualNode = setBalanceL(actualNode, log);
+            }
+        } else if (category.compareTo(actualNode.categoryName) > 0) {
+            AVLNode right = deleteRecursively(actualNode.right, category, log);
+            actualNode.right = right;
+            if (log.wellBalanced) {
+                actualNode = setBalanceR(actualNode, log);
+            }
+        } else {
+            AVLNode tmp = actualNode;
+            if (tmp.left == null) {
+                actualNode = tmp.right;
+                log.wellBalanced = true;
+            } else if (tmp.right == null) {
+                actualNode = tmp.left;
+                log.wellBalanced = true;
+            } else {
+                AVLNode node = replace(actualNode, actualNode.left, log);
+                actualNode.left = node;
+                if (log.wellBalanced) {
+                    actualNode = setBalanceL(actualNode, log);
+                }
+            }
+            System.out.println("Se elimino");
+            tmp = null;
+        }
+        return actualNode;
+    }
+
+    AVLNode replace(AVLNode tmp, AVLNode aux, Logical log) {
+        if (aux.right != null) {
+            AVLNode right = replace(tmp, aux.right, log);
+            aux.right=right;
+            if (log.wellBalanced) {
+                aux = setBalanceR(aux, log);
+            }
+        } else {
+            //tmp.setData(aux.getData());
+            tmp = aux;
+            //aux = (AVL_Node) aux.getLeft();
+            tmp = null;
+            //log.setLog(true);
+        }
+        return aux;
+    }
+
+    AVLNode setBalanceL(AVLNode actualNode, Logical log) {
+        AVLNode tmp;
+        switch (getBalance(actualNode)) {
+            case -1:
+                System.out.println("No se que pedo jaja");
+                break;
+            case 0:
+                //actualNode
+                break;
+            case 1:
+                tmp = actualNode.right;
+                if (getBalance(tmp) >= 0) {
+                    if (getBalance(tmp) == 0) {
+                        log.wellBalanced = false;
+                    }
+                    //actualNode = 
+                }
+        }
+        return null;
+    }
+
+    AVLNode setBalanceR(AVLNode actualNode, Logical log) {
+        AVLNode tmp;
+        switch (getBalance(actualNode)) {
+            case -1:
+                System.out.println("No se que pedo jaja");
+                break;
+            case 0:
+                //actu
+                break;
+        }
+        return null;
+    }
+}
+
+class Logical {
+
+    public boolean wellBalanced;
+
+    Logical(boolean balanced) {
+        wellBalanced = balanced;
     }
 }

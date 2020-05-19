@@ -16,8 +16,10 @@ import Elements.User;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -248,14 +250,14 @@ public class UserLogged extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        JFileChooser fc = new JFileChooser("C:\\Users\\Fernando\\OneDrive\\Documentos\\2020 1er Semestre\\Estructuras\\Proyecto2");
+        JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos JSON", "json");
         fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             try {
-                JsonObject objects = (JsonObject) JsonParser.parseReader(new FileReader(file));
+                JsonObject objects = (JsonObject) JsonParser.parseReader(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
                 JsonArray books = objects.get("libros").getAsJsonArray();
                 for (int i = 0; i < books.size(); i++) {
                     JsonObject obj = (JsonObject) books.get(i);
@@ -294,8 +296,8 @@ public class UserLogged extends javax.swing.JFrame {
                 }
                 JOptionPane.showMessageDialog(null, "La carga se ha realizado con éxito.");
                 showBooks();
-                currentUser.getLibrary().generateGraph("prueba");
-                AVLTree.VirtualLibrary.generateGraph("Virtual");
+                //currentUser.getLibrary().generateGraph("prueba");
+                //AVLTree.VirtualLibrary.generateGraph("Virtual");
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Ocurrió un error en la lectura del archivo de configuración");
